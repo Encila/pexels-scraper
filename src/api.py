@@ -71,12 +71,14 @@ class PexelsAPI:
             url=self.base, payload=payload
         )
 
-        while response["next_page"]:
+        next_page_url = response.get('next_page', None)
+        while next_page_url:
             (
                 response,
                 save_image_count,
             ) = self._send_request_and_iterate_over_response_photos(
                 url=response["next_page"], payload=payload, image_count=save_image_count
             )
+            next_page_url = response.get('next_page', None)
 
         logging.info("Scraping complete for a total of `%s` images.", save_image_count)
